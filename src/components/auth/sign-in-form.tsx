@@ -19,8 +19,11 @@ import { Controller, useForm } from 'react-hook-form';
 import { z as zod } from 'zod';
 
 import { paths } from '@/paths';
-import { authClient } from '@/lib/auth/client';
+// import { authClient } from '@/lib/auth/client';
 import { useUser } from '@/hooks/use-user';
+
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '@/lib/firebase/firebase-config';
 
 const schema = zod.object({
   email: zod.string().min(1, { message: 'Email is required' }).email(),
@@ -47,24 +50,44 @@ export function SignInForm(): React.JSX.Element {
     formState: { errors },
   } = useForm<Values>({ defaultValues, resolver: zodResolver(schema) });
 
+  // const onSubmit = React.useCallback(
+  //   async (values: Values): Promise<void> => {
+  //     setIsPending(true);
+
+  //     const { error } = await authClient.signInWithPassword(values);
+
+  //     if (error) {
+  //       setError('root', { type: 'server', message: error });
+  //       setIsPending(false);
+  //       return;
+  //     }
+
+  //     // Refresh the auth state
+  //     await checkSession?.();
+
+  //     // UserProvider, for this case, will not refresh the router
+  //     // After refresh, GuestGuard will handle the redirect
+  //     router.refresh();
+  //   },
+  //   [checkSession, router, setError]
+  // );
+
   const onSubmit = React.useCallback(
     async (values: Values): Promise<void> => {
       setIsPending(true);
-
-      const { error } = await authClient.signInWithPassword(values);
-
-      if (error) {
-        setError('root', { type: 'server', message: error });
+      try {
+        await signInWithEmailAndPassword(auth, values.email, values.password);
+        
+        await checkSession?.();
+        router.push('/dashboard');
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          setError('root', { type: 'server', message: error.message });
+        } else {
+          setError('root', { type: 'server', message: 'An unknown error occurred' });
+        }
         setIsPending(false);
-        return;
       }
-
-      // Refresh the auth state
-      await checkSession?.();
-
-      // UserProvider, for this case, will not refresh the router
-      // After refresh, GuestGuard will handle the redirect
-      router.refresh();
     },
     [checkSession, router, setError]
   );
@@ -141,11 +164,11 @@ export function SignInForm(): React.JSX.Element {
       <Alert color="warning">
         Use{' '}
         <Typography component="span" sx={{ fontWeight: 700 }} variant="inherit">
-          sofia@devias.io
+          dileepaashen81@gmail.com
         </Typography>{' '}
         with password{' '}
         <Typography component="span" sx={{ fontWeight: 700 }} variant="inherit">
-          Secret1
+          Admin@123
         </Typography>
       </Alert>
     </Stack>
