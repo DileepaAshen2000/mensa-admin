@@ -19,8 +19,12 @@ import { Controller, useForm } from 'react-hook-form';
 import { z as zod } from 'zod';
 
 import { paths } from '@/paths';
-import { authClient } from '@/lib/auth/client';
+// import { authClient } from '@/lib/auth/client';
 import { useUser } from '@/hooks/use-user';
+
+// import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+// import { doc, setDoc } from 'firebase/firestore';
+// import { auth, db } from '@/lib/firebase/firebase-config';
 
 const schema = zod.object({
   firstName: zod.string().min(1, { message: 'First name is required' }),
@@ -29,6 +33,11 @@ const schema = zod.object({
   password: zod.string().min(6, { message: 'Password should be at least 6 characters' }),
   terms: zod.boolean().refine((value) => value, 'You must accept the terms and conditions'),
 });
+
+interface SignupResponse {
+  error?: string;
+  // Add other expected fields if needed
+}
 
 type Values = zod.infer<typeof schema>;
 
@@ -48,27 +57,75 @@ export function SignUpForm(): React.JSX.Element {
     formState: { errors },
   } = useForm<Values>({ defaultValues, resolver: zodResolver(schema) });
 
+  // const onSubmit = React.useCallback(
+  //   async (values: Values): Promise<void> => {
+  //     setIsPending(true);
+  //     try {
+  //       const userCredential = await createUserWithEmailAndPassword(auth, values.email, values.password);
+  //       const user = userCredential.user;
+  
+  //       // Save additional user details in Firestore
+  //       await setDoc(doc(db, '4', user.uid), {
+  //         uid: user.uid,
+  //         firstName: values.firstName,
+  //         lastName: values.lastName,
+  //         email: values.email,
+  //         role: 'admin', // You said you want them as admin
+  //         createdAt: new Date(),
+  //       });
+  
+  //       await checkSession?.();
+  //       router.refresh();
+  //     } catch (error: any) {
+  //       setError('root', { type: 'server', message: error.message });
+  //       setIsPending(false);
+  //     }
+  //   },
+  //   [checkSession, router, setError]
+  // );
+
   const onSubmit = React.useCallback(
     async (values: Values): Promise<void> => {
       setIsPending(true);
-
-      const { error } = await authClient.signUp(values);
-
-      if (error) {
-        setError('root', { type: 'server', message: error });
-        setIsPending(false);
-        return;
+  
+      try {
+        const response = await fetch('http://localhost:3000/api/auth/signup', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: values.email,
+            password: values.password,
+            fullname: `${values.firstName} ${values.lastName}`,
+          }),
+        });
+  
+        // const result = await response.json();
+        const result = (await response.json()) as SignupResponse;
+  
+        if (!response.ok) {
+          throw new Error(result.error || 'Signup failed');
+        }
+  
+        // Refresh auth state (optional depending on your auth strategy)
+        await checkSession?.();
+  
+        router.refresh();
+      }catch (error: unknown) {
+        if (error instanceof Error) {
+          setError('root', { type: 'server', message: error.message });
+        } else {
+          setError('root', { type: 'server', message: 'An unknown error occurred' });
+        }
       }
-
-      // Refresh the auth state
-      await checkSession?.();
-
-      // UserProvider, for this case, will not refresh the router
-      // After refresh, GuestGuard will handle the redirect
-      router.refresh();
+      finally {
+        setIsPending(false);
+      }
     },
     [checkSession, router, setError]
   );
+  
 
   return (
     <Stack spacing={3}>

@@ -4,17 +4,14 @@ import * as React from 'react';
 import RouterLink from 'next/link';
 import { usePathname } from 'next/navigation';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { ArrowSquareUpRight as ArrowSquareUpRightIcon } from '@phosphor-icons/react/dist/ssr/ArrowSquareUpRight';
 import { CaretUpDown as CaretUpDownIcon } from '@phosphor-icons/react/dist/ssr/CaretUpDown';
 
 import type { NavItemConfig } from '@/types/nav';
 import { paths } from '@/paths';
 import { isNavItemActive } from '@/lib/is-nav-item-active';
-import { Logo } from '@/components/core/logo';
 
 import { navItems } from './config';
 import { navIcons } from './nav-icons';
@@ -52,7 +49,7 @@ export function SideNav(): React.JSX.Element {
     >
       <Stack spacing={2} sx={{ p: 3 }}>
         <Box component={RouterLink} href={paths.home} sx={{ display: 'inline-flex' }}>
-          <Logo color="light" height={32} width={122} />
+          {/* <Logo color="light" height={32} width={122} /> */}
         </Box>
         <Box
           sx={{
@@ -70,7 +67,7 @@ export function SideNav(): React.JSX.Element {
               Workspace
             </Typography>
             <Typography color="inherit" variant="subtitle1">
-              Devias
+              Mensa Admin
             </Typography>
           </Box>
           <CaretUpDownIcon />
@@ -86,11 +83,11 @@ export function SideNav(): React.JSX.Element {
           <Typography color="var(--mui-palette-neutral-100)" variant="subtitle2">
             Need more features?
           </Typography>
-          <Typography color="var(--mui-palette-neutral-400)" variant="body2">
+          {/* <Typography color="var(--mui-palette-neutral-400)" variant="body2">
             Check out our Pro solution template.
-          </Typography>
+          </Typography> */}
         </div>
-        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+        {/* <Box sx={{ display: 'flex', justifyContent: 'center' }}>
           <Box
             component="img"
             alt="Pro version"
@@ -108,7 +105,7 @@ export function SideNav(): React.JSX.Element {
           variant="contained"
         >
           Pro version
-        </Button>
+        </Button> */}
       </Stack>
     </Box>
   );
