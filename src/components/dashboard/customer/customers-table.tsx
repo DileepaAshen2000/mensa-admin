@@ -25,6 +25,7 @@ import dayjs from 'dayjs';
 import { useSelection } from '@/hooks/use-selection';
 import Alert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
+import { BASE_URL } from '../../../api/api'
 
 interface Order {
   id: string;
@@ -65,7 +66,7 @@ export function CustomersTable(): React.JSX.Element {
   const selectedOrder = orders.find(order => order.id === selectedOrderId);
 
   React.useEffect(() => {
-    fetch('http://localhost:8000/api/orders/get-all')
+    fetch(`${BASE_URL}/orders/get-all`)
       .then((res) => res.json())
       .then((data) => {
         setOrders(data.data);
@@ -99,7 +100,7 @@ export function CustomersTable(): React.JSX.Element {
     if (!selectedOrderId) return;
 
     try {
-      const response = await fetch(`http://localhost:8000/api/orders/updateStatus/${selectedOrderId}`, {
+      const response = await fetch(`${BASE_URL}/orders/updateStatus/${selectedOrderId}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: newStatus }),
@@ -176,7 +177,7 @@ export function CustomersTable(): React.JSX.Element {
                   <TableCell>{order.user_mobile}</TableCell>
                   <TableCell>{order.deliveryDate}</TableCell>
                   <TableCell>{order.status}</TableCell>
-                  <TableCell>{dayjs(order.createdAt).format('MMM D, YYYY')}</TableCell>
+                  <TableCell>{dayjs(order.createdAt).format('MMM D, YYYY h:mm A')}</TableCell>
                   <TableCell>
                     {order.items.map((item, index) => (
                       <Box key={index}>
@@ -245,7 +246,7 @@ export function CustomersTable(): React.JSX.Element {
       </Dialog>
 
       {/* View Dialog */}
-      <Dialog open={openViewDialog} onClose={() => setOpenViewDialog(false)} maxWidth="md" fullWidth>
+      <Dialog open={openViewDialog} onClose={() => {setOpenViewDialog(false);}} maxWidth="md" fullWidth>
         <DialogTitle>Order Details</DialogTitle>
         <DialogContent dividers>
           {selectedOrder && (
@@ -308,7 +309,7 @@ export function CustomersTable(): React.JSX.Element {
           )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpenViewDialog(false)}>Close</Button>
+          <Button onClick={() => {setOpenViewDialog(false);}}>Close</Button>
         </DialogActions>
       </Dialog>
     </Card>
