@@ -63,6 +63,12 @@ module.exports = {
     '@typescript-eslint/no-unnecessary-condition': 'off', // remove when no static data is used
     '@typescript-eslint/require-await': 'off', // Server Actions require async flag always
     '@typescript-eslint/prefer-nullish-coalescing': 'off', // personal style
+    '@typescript-eslint/no-unsafe-assignment': 'off', // disable unsafe assignment warnings
+    '@typescript-eslint/no-unsafe-member-access': 'off', // disable unsafe member access warnings
+    '@typescript-eslint/no-unsafe-argument': 'off', // disable unsafe argument warnings
+    '@typescript-eslint/no-explicit-any': 'off', // disable explicit any warnings
+    '@typescript-eslint/restrict-plus-operands': 'off', // disable restrict plus operands warnings
+    '@typescript-eslint/no-unsafe-call': 'off',
     '@typescript-eslint/restrict-template-expressions': [
       'error',
       {

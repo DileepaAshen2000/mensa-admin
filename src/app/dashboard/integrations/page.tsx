@@ -26,6 +26,7 @@ import {
   Save as SaveIcon,
   CloudUpload as CloudUploadIcon
 } from '@mui/icons-material';
+import {BASE_URL} from '../../../api/api';
 
 // TypeScript interfaces
 interface Option {
@@ -118,7 +119,7 @@ const AddFoodForm: React.FC = () => {
   };
 
   React.useEffect(() => {
-    fetch('http://localhost:8000/api/category')
+    fetch(`${BASE_URL}/category`)
       .then(res => res.json())
       .then(data => {
         if (data.status && Array.isArray(data.data)) {
@@ -293,7 +294,7 @@ const AddFoodForm: React.FC = () => {
       });
       
       // Send to backend API
-      const response = await fetch('http://localhost:8000/api/foods/create', {
+      const response = await fetch(`${BASE_URL}/foods/create`, {
         method: 'POST',
         body: formData,
         // No Content-Type header needed - browser will set it with boundary

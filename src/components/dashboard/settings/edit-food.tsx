@@ -6,7 +6,6 @@ import {
   TextField, 
   Box, 
   Typography, 
-  Paper, 
   IconButton,
   Grid, 
   Divider,
@@ -29,6 +28,7 @@ import {
   Save as SaveIcon,
   CloudUpload as CloudUploadIcon
 } from '@mui/icons-material';
+import { BASE_URL } from '../../../api/api'
 
 // TypeScript interfaces
 interface Option {
@@ -123,7 +123,7 @@ const EditFood: React.FC<EditFoodProps> = ({ foodToEdit, onEditSuccess, onClose 
 
   // Fetch categories
   useEffect(() => {
-    fetch('http://localhost:8000/api/category')
+    fetch(`${BASE_URL}/category`)
       .then(res => res.json())
       .then(data => {
         if (data.status && Array.isArray(data.data)) {
@@ -342,8 +342,8 @@ const EditFood: React.FC<EditFoodProps> = ({ foodToEdit, onEditSuccess, onClose 
       
       // Determine API endpoint and method
       const apiUrl = isEditMode 
-        ? `http://localhost:8000/api/foods/update/${food.id}`
-        : 'http://localhost:8000/api/foods/create';
+        ? `${BASE_URL}/foods/update/${food.id}`
+        : `${BASE_URL}/foods/create`;
       const method = isEditMode ? 'PUT' : 'POST';
       
       // Send to backend API
@@ -512,7 +512,7 @@ const EditFood: React.FC<EditFoodProps> = ({ foodToEdit, onEditSuccess, onClose 
                               backgroundColor: 'white',
                               '&:hover': { backgroundColor: '#f5f5f5' }
                             }}
-                            onClick={() => removeExistingImage(index)}
+                            onClick={() => {removeExistingImage(index);}}
                           >
                             <DeleteIcon fontSize="small" />
                           </IconButton>
@@ -571,7 +571,7 @@ const EditFood: React.FC<EditFoodProps> = ({ foodToEdit, onEditSuccess, onClose 
                             backgroundColor: 'white',
                             '&:hover': { backgroundColor: '#f5f5f5' }
                           }}
-                          onClick={() => removeFile(index)}
+                          onClick={() => {removeFile(index);}}
                         >
                           <DeleteIcon fontSize="small" />
                         </IconButton>
@@ -605,13 +605,13 @@ const EditFood: React.FC<EditFoodProps> = ({ foodToEdit, onEditSuccess, onClose 
                         <TextField
                           label="Variation Name"
                           value={variation.name}
-                          onChange={(e) => handleVariationNameChange(variationIndex, e.target.value)}
+                          onChange={(e) => {handleVariationNameChange(variationIndex, e.target.value);}}
                           variant="outlined"
                           required
                           sx={{ width: '70%' }}
                         />
                         <IconButton
-                          onClick={() => removeVariation(variationIndex)}
+                          onClick={() => {removeVariation(variationIndex);}}
                           color="error"
                         >
                           <DeleteIcon />
@@ -635,12 +635,12 @@ const EditFood: React.FC<EditFoodProps> = ({ foodToEdit, onEditSuccess, onClose 
                           <TextField
                             label="Option Name"
                             value={option.name}
-                            onChange={(e) => handleOptionChange(
+                            onChange={(e) => {handleOptionChange(
                               variationIndex,
                               optionIndex,
                               'name',
                               e.target.value
-                            )}
+                            );}}
                             variant="outlined"
                             required
                             sx={{ flex: 2 }}
@@ -654,12 +654,12 @@ const EditFood: React.FC<EditFoodProps> = ({ foodToEdit, onEditSuccess, onClose 
                               id={`price-${variationIndex}-${optionIndex}`}
                               type="number"
                               value={option.additionalPrice === 0 ? '' : option.additionalPrice}
-                              onChange={(e) => handleOptionChange(
+                              onChange={(e) => {handleOptionChange(
                                 variationIndex,
                                 optionIndex,
                                 'additionalPrice',
                                 e.target.value
-                              )}
+                              );}}
                               startAdornment={<InputAdornment position="start">LKR</InputAdornment>}
                               label="Additional Price"
                               inputProps={{ min: 0, step: 0.01 }}
@@ -667,7 +667,7 @@ const EditFood: React.FC<EditFoodProps> = ({ foodToEdit, onEditSuccess, onClose 
                           </FormControl>
                           
                           <IconButton
-                            onClick={() => removeOption(variationIndex, optionIndex)}
+                            onClick={() => {removeOption(variationIndex, optionIndex);}}
                             color="error"
                           >
                             <DeleteIcon />
@@ -677,7 +677,7 @@ const EditFood: React.FC<EditFoodProps> = ({ foodToEdit, onEditSuccess, onClose 
                       
                       <Button
                         startIcon={<AddIcon />}
-                        onClick={() => addOption(variationIndex)}
+                        onClick={() => {addOption(variationIndex);}}
                         variant="outlined"
                         size="small"
                         sx={{ mt: 1 }}
