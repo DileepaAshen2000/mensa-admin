@@ -142,8 +142,6 @@ const AddFoodForm: React.FC = () => {
     const selected = categories.find(cat => cat.id === selectedId);
     setSelectedCategoryId(selectedId);
     setSelectedCategoryName(selected?.name || '');
-
-    // console.log("category",selectedCategoryId,selectedCategoryName)
   };
 
   // Remove a file
