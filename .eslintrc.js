@@ -69,6 +69,7 @@ module.exports = {
     '@typescript-eslint/no-explicit-any': 'off', // disable explicit any warnings
     '@typescript-eslint/restrict-plus-operands': 'off', // disable restrict plus operands warnings
     '@typescript-eslint/no-unsafe-call': 'off',
+    '@typescript-eslint/no-floating-promises': 'off',
     '@typescript-eslint/restrict-template-expressions': [
       'error',
       {

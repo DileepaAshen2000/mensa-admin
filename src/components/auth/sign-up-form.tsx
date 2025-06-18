@@ -17,6 +17,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { Controller, useForm } from 'react-hook-form';
 import { z as zod } from 'zod';
+import {BASE_URL} from "../../api/api";
 
 import { paths } from '@/paths';
 // import { authClient } from '@/lib/auth/client';
@@ -89,7 +90,7 @@ export function SignUpForm(): React.JSX.Element {
       setIsPending(true);
   
       try {
-        const response = await fetch('http://localhost:3000/api/auth/signup', {
+        const response = await fetch(`${BASE_URL}/auth/signup`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

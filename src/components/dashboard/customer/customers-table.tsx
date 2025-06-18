@@ -20,6 +20,7 @@ import {
   DialogTitle,
   MenuItem,
   Select,
+  TextField,
 } from '@mui/material';
 import dayjs from 'dayjs';
 import { useSelection } from '@/hooks/use-selection';
@@ -29,6 +30,7 @@ import { BASE_URL } from '../../../api/api'
 
 interface Order {
   id: string;
+  user_name: string;
   user_email: string;
   user_mobile: string;
   deliveryDate: string;
@@ -55,6 +57,7 @@ export function CustomersTable(): React.JSX.Element {
   const [openEditDialog, setOpenEditDialog] = React.useState(false);
   const [openViewDialog, setOpenViewDialog] = React.useState(false);
   const [newStatus, setNewStatus] = React.useState('');
+  const [specialNote, setSpecialNote] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [open, setOpen] = useState(false);
   const rowIds = React.useMemo(() => orders.map((order) => order.id), [orders]);
@@ -103,20 +106,23 @@ export function CustomersTable(): React.JSX.Element {
       const response = await fetch(`${BASE_URL}/orders/updateStatus/${selectedOrderId}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: newStatus }),
+        body: JSON.stringify({ status: newStatus, note: specialNote }),
       });
 
       if (response.ok) {
         const updatedOrders = orders.map((order) =>
-          order.id === selectedOrderId ? { ...order, status: newStatus } : order
+          order.id === selectedOrderId
+            ? { ...order, status: newStatus, note: specialNote }
+            : order
         );
         setOrders(updatedOrders);
         setOpenEditDialog(false);
         setSelectedOrderId(null);
+        setSpecialNote('');
       }
     } catch (error) {
-      // console.error('Status update failed:', error);
-      setErrorMessage('Failed to fetch orders: ' + error); setOpen(true);
+      setErrorMessage('Failed to update order.');
+      setOpen(true);
     }
   };
 
@@ -141,12 +147,12 @@ export function CustomersTable(): React.JSX.Element {
                   }}
                 />
               </TableCell>
+              <TableCell>Customer Name</TableCell>
               <TableCell>Email</TableCell>
               <TableCell>Phone</TableCell>
               <TableCell>Delivery Date</TableCell>
               <TableCell>Status</TableCell>
               <TableCell>Created At</TableCell>
-              <TableCell>Items</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -173,20 +179,12 @@ export function CustomersTable(): React.JSX.Element {
                       }}
                     />
                   </TableCell>
+                  <TableCell>{order.user_name}</TableCell>
                   <TableCell>{order.user_email}</TableCell>
                   <TableCell>{order.user_mobile}</TableCell>
                   <TableCell>{order.deliveryDate}</TableCell>
                   <TableCell>{order.status}</TableCell>
                   <TableCell>{dayjs(order.createdAt).format('MMM D, YYYY h:mm A')}</TableCell>
-                  <TableCell>
-                    {order.items.map((item, index) => (
-                      <Box key={index}>
-                        <Typography variant="body2">
-                          {item.quantity} x {item.type} ({item.flavour}) - {item.message}
-                        </Typography>
-                      </Box>
-                    ))}
-                  </TableCell>
                 </TableRow>
               );
             })}
@@ -238,6 +236,16 @@ export function CustomersTable(): React.JSX.Element {
             <MenuItem value="delivered">Delivered</MenuItem>
             <MenuItem value="cancelled">Cancelled</MenuItem>
           </Select>
+
+          <Typography mt={3} mb={1}>Special Note (optional):</Typography>
+          <TextField
+            fullWidth
+            multiline
+            minRows={3}
+            placeholder="Enter any special note here..."
+            value={specialNote}
+            onChange={(e) => {setSpecialNote(e.target.value)}}
+          />
         </DialogContent>
         <DialogActions>
           <Button onClick={() => {setOpenEditDialog(false)}}>Cancel</Button>
@@ -253,6 +261,7 @@ export function CustomersTable(): React.JSX.Element {
             <Box>
               <Typography variant="h6" gutterBottom>User Information</Typography>
               <Box display="flex" flexDirection="column" gap={1} mb={2}>
+                <Typography>Customer Name: {selectedOrder.user_name}</Typography>
                 <Typography>Email: {selectedOrder.user_email}</Typography>
                 <Typography>Phone: {selectedOrder.user_mobile}</Typography>
                 <Typography>Address: {selectedOrder.deliveryAddress}</Typography>
@@ -293,10 +302,6 @@ export function CustomersTable(): React.JSX.Element {
 
               <Divider sx={{ my: 2 }} />
 
-              <Box display="flex" justifyContent="space-between">
-                <Typography fontWeight="bold">Subtotal:</Typography>
-                <Typography>Rs. {selectedOrder.subtotal}</Typography>
-              </Box>
               <Box display="flex" justifyContent="space-between">
                 <Typography fontWeight="bold">Total:</Typography>
                 <Typography>Rs. {selectedOrder.total}</Typography>

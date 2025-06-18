@@ -4,13 +4,12 @@ import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 
 const firebaseConfig = {
-    apiKey: "AIzaSyDpAmPGgRt3gtjTAHOldZKdj-_iAd6IQag",
-    authDomain: "mensa-foods.firebaseapp.com",
-    // databaseURL: "https://mensa-foods-default-rtdb.firebaseio.com",
-    projectId: "mensa-foods",
-    storageBucket: "mensa-foods.firebasestorage.app",
-    messagingSenderId: "397172133190",
-    appId: "1:397172133190:web:e8df9ff4c89de623e8a947"
+    apiKey: "AIzaSyC-t81O4bJYxOXnva52ZfJhIZBO7KQn7F8",
+    authDomain: "mensa-admin.firebaseapp.com",
+    projectId: "mensa-admin",
+    storageBucket: "mensa-admin.firebasestorage.app",
+    messagingSenderId: "851049381206",
+    appId: "1:851049381206:web:d714fac45a2073a6332af7"
 };
 
 // Initialize Firebase
